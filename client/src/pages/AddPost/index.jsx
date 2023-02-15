@@ -79,9 +79,7 @@ export const AddPost = () => {
   const handleTagsFieldChange = (event) => {
     const tagsFieldValue = event.target.value;
     const tagsValue = tagsFieldValue.trim() !== '' ? tagsFieldValue.trim() : '';
-    if (tagsValue) {
-      setPostData({ ...postData, tags: tagsValue });
-    }
+    setPostData({ ...postData, tags: tagsValue });
   };
 
   useEffect(() => {
