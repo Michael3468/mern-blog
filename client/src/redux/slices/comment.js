@@ -17,7 +17,7 @@ export const fetchCommentsByPostId = createAsyncThunk(
 export const fetchRemovePostComments = createAsyncThunk(
   'comments/fetchRemovePostComments',
   async (postId) => {
-    const { data } = await axios.delete(`/post-comments-remove/${postId}`);
+    const { data } = await axios.delete(`/post-comments/${postId}`);
     return data;
   }
 );

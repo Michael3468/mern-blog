@@ -66,24 +66,30 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
 });
 // upload files to server -
 
+app.get('/auth/me', checkAuth, UserController.getMe);
 app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register);
 app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login);
-app.get('/auth/me', checkAuth, UserController.getMe);
+
 app.get('/tags', PostController.getLastTags);
-app.get('/posts', PostController.getAllSortedByDate);
-app.get('/popular-posts', PostController.getAllSortedByPopularity);
-app.get('/posts/:id', PostController.getOne);
 app.get('/tags/:tagname', PostController.getAllWithTagByDate);
-app.get('/post-comments/:id', CommentController.getCommentsByPostId);
+
+app
+  .route('/posts')
+  .get(PostController.getAllSortedByDate)
+  .post(checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
+
+app.get('/popular-posts', PostController.getAllSortedByPopularity);
+
+app
+  .route('/posts/:id')
+  .get(PostController.getOne)
+  .patch(checkAuth, postCreateValidation, handleValidationErrors, PostController.update)
+  .delete(checkAuth, PostController.remove);
+
+app
+  .route('/post-comments/:id')
+  .get(CommentController.getCommentsByPostId)
+  .delete(CommentController.removePostComments);
+
 app.get('/last-comments', CommentController.getLastComments);
-app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
 app.post('/comment-create', checkAuth, CommentController.create);
-app.delete('/posts/:id', checkAuth, PostController.remove);
-app.delete('/post-comments-remove/:id', CommentController.removePostComments);
-app.patch(
-  '/posts/:id',
-  checkAuth,
-  postCreateValidation,
-  handleValidationErrors,
-  PostController.update,
-);
